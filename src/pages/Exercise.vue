@@ -20,7 +20,12 @@
     <div class="form q-mb-lg">
       <div class="row q-mb-md">
         <label>Name:</label>
-        <input v-model="name" type="text" :class="{ error: nameInvalid }" />
+        <input
+          v-model="name"
+          type="text"
+          :class="{ error: nameInvalid }"
+          v-autofocus
+        />
         <label v-show="nameInvalid" class="error"
           >Please enter 15 characters or less</label
         >
@@ -33,7 +38,7 @@
         >
       </div>
       <div class="row">
-        <button>Generate Random Person</button>
+        <button @click="randomPerson">Generate Random Person</button>
       </div>
     </div>
     <div v-if="name && age" class="description q-mb-lg">
@@ -63,12 +68,13 @@ export default {
   data() {
     return {
       name: "Lucas",
-      age: 26
+      age: 26,
+      names: ["Paulo", "Fernanada", "Rodrigo"]
     };
   },
   computed: {
     agePlusTenYears(age) {
-      age = this.age;
+      age = parseInt(this.age);
       return age + 10;
     },
     nameInvalid() {
@@ -78,11 +84,26 @@ export default {
       return this.age > 100;
     }
   },
-  methods: {},
+  methods: {
+    randomPerson() {
+      this.name = this.names[Math.floor(Math.random() * this.names.length)];
+      this.age = Math.floor(Math.random() * 100) + 1;
+    }
+  },
   filters: {
     uppercase(value) {
       return value.toUpperCase();
     }
+  },
+  directives: {
+    autofocus: {
+      inserted(el) {
+        el.focus();
+      }
+    }
+  },
+  mounted() {
+    this.randomPerson();
   }
 };
 </script>
